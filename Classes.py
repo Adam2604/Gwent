@@ -1,4 +1,4 @@
-from Effects import plus_one_point, double_points, one_point
+from Effects import plus_one_point, double_points, weather_one_point
 
 class Player:
     def __init__(self, name):
@@ -20,8 +20,8 @@ class Player:
             if card.effect == "double_points":
                 double_points(self, card)
 
-            if card.effect == "one_point":
-                one_point(self, card)
+            if card.effect == "weather_one_point":
+                weather_one_point(self, card)
 
 class Fraction:
     def __init__(self, name):
@@ -59,3 +59,8 @@ class Siege_combat(Unit):
 class Special_card(Unit):
     def __init__(self, name, effect):
         super().__init__(name, None, None, "Special_card", effect)
+
+class Hero(Unit):
+    def __init__(self, name, fraction, effect = None):
+        super().__init__(name, 10, fraction, "Hero", effect)
+        self.is_hero = True #flaga zaznaczająca że to bohater

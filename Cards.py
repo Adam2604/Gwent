@@ -48,8 +48,8 @@ Northern_Realms_cards = [
     Ranged_combat("Detmold", 6, "Królestwo Północy"),
     Siege_combat("Katapulta", 8, "Królestwo Północy", "double_points"),  # połączone podwajają punkty swoje
     Siege_combat("Katapulta", 8, "Królestwo Północy", "double_points"),
-    Ranged_combat("Philippa Eilhart", 10, "Królestwo Północy"),  # bohater
-    Close_combat("Esterad Thyssen", 10, "Królestwo Północy"),  # bohater
-    Close_combat("Jan Natalis", 10, "Królestwo Północy"),  # bohater
-    Close_combat("Vernon Roche", 10, "Królestwo Północy")  # bohater
+    Hero("Philippa Eilhart", 10, "Królestwo Północy"),  # bohater
+    Hero("Esterad Thyssen", 10, "Królestwo Północy"),  # bohater
+    Hero("Jan Natalis", 10, "Królestwo Północy"),  # bohater
+    Hero("Vernon Roche", 10, "Królestwo Północy")  # bohater
 ]
