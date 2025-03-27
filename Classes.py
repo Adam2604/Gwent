@@ -1,5 +1,4 @@
-from Effects import plus_one_point, double_points
-
+from Effects import plus_one_point, double_points, one_point
 
 class Player:
     def __init__(self, name):
@@ -20,6 +19,9 @@ class Player:
 
             if card.effect == "double_points":
                 double_points(self, card)
+
+            if card.effect == "one_point":
+                one_point(self, card)
 
 class Fraction:
     def __init__(self, name):
