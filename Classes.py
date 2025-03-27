@@ -1,13 +1,25 @@
+from Effects import plus_one_point, double_points
+
 
 class Player:
     def __init__(self, name):
         self.name = name
-        self.cards_in_the_deck = []
-        self.cards_in_the_game = []
+        self.cards_in_the_deck = [] #kart w talii
+        self.cards_in_the_game = [] #karty wyłożone na stół
+        self.points = 0
 
     def use_card(self, card):
-        self.cards_in_the_deck.append(card)
-        print(f"{self.name} used {card.name} (Strength: {card.strength})")
+        if card in self.cards_in_the_deck:
+            self.cards_in_the_deck.remove(card)
+            self.cards_in_the_deck.append(card)
+            self.points += card.strength
+            print(f"{self.name} used {card.name} (Strength: {card.strength})")
+
+            if card.effect == "plus_one_point":
+                plus_one_point(self, card)
+
+            if card.effect == "double_points":
+                double_points(self, card)
 
 class Fraction:
     def __init__(self, name):
