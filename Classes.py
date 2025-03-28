@@ -31,11 +31,11 @@ class Fraction:
         return f"Fraction: {self.name}"
 
 class Unit:
-    def __init__(self, name, strength, fraction, type,  effect = None):
+    def __init__(self, name, strength, fraction, unit_type, effect = None):
         self.name = name
         self.strength = strength
         self.fraction = fraction
-        self.type = type
+        self.type = unit_type
         self.effect = effect
 
     def __str__(self):
