@@ -1,0 +1,31 @@
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># This is a sample Python script.\r\n\r\n# Press Shift+F10 to execute it or replace it with your code.\r\n# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.\r\n\r\n\r\ndef print_hi(name):\r\n    # Use a breakpoint in the code line below to debug your script.\r\n    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.\r\n\r\n\r\n# Press the green button in the gutter to run the script.\r\nif __name__ == '__main__':\r\n    print_hi('PyCharm')\r\n\r\n# See PyCharm help at https://www.jetbrains.com/help/pycharm/\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision 5be33580d3ba78b7a83c58820d1c6e8d0ab99565)
++++ b/main.py	(date 1742410734470)
+@@ -1,16 +1,6 @@
+-# This is a sample Python script.
+-
+-# Press Shift+F10 to execute it or replace it with your code.
+-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
++from Cards import Fraction, Unit, Close_combat, Ranged_combat, Siege_combat, Special_card, Player
+ 
+ 
+-def print_hi(name):
+-    # Use a breakpoint in the code line below to debug your script.
+-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+ 
+-
+-# Press the green button in the gutter to run the script.
+-if __name__ == '__main__':
+-    print_hi('PyCharm')
+-
+-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
++#Close combat Units
++CC_unit1 = Close_combat("Mistrz Oblężeń z Kaedwen", 1, 0, "Królestwo Północy")
+\ No newline at end of file
