@@ -1,7 +1,20 @@
 from Cards import special_cards, Northern_Realms_cards
+from database import initialize_db, add_player, save_player_deck, load_player_deck
+from Classes import Unit
 
 
 def wybierz_talie(gracz_num):
+    player_name = f"Gracz {gracz_num}"
+    saved_deck = load_player_deck(player_name)
+
+    if saved_deck:
+        print(f"\nZnaleziono zapisaną talię dla {player_name}:")
+        for card in saved_deck:
+            print(f"- {card[0]} (Siła: {card[1]})")
+        choice = input("Czy chcesz załadować tę talię? (tak/nie): ").lower()
+        if choice == "tak":
+            return [Unit(*card) for card in saved_deck], []
+
     units = Northern_Realms_cards[:]  # Tworzymy kopię listy kart jednostek
     special = special_cards[:]  # Tworzymy kopię listy kart specjalnych
     chosen_cards = []  # Lista, w której będą przechowywane wybrane karty
@@ -81,13 +94,22 @@ def wybierz_talie(gracz_num):
     for card in chosen_special_cards:
         print(f"- {card.name} (Efekt: {card.effect})")
 
-    # Po zakończeniu wyboru zwrócimy pełną talię
+    # Zapytanie gracza, czy chce zapisać talię
+    save_choice = input("\nCzy chcesz zapisać tę talię w bazie danych? (tak/nie): ").lower()
+    if save_choice == "tak":
+        add_player(player_name)
+        save_player_deck(player_name, chosen_cards + chosen_special_cards)
+        print("Talia została zapisana w bazie danych.")
+    else:
+        print("Talia nie została zapisana.")
+
     return chosen_cards, chosen_special_cards
 
 
 if __name__ == "__main__":
-    talia_gracza1_jednostki, talia_gracza1_specjalne = wybierz_talie(1)
+    initialize_db()
 
+    talia_gracza1_jednostki, talia_gracza1_specjalne = wybierz_talie(1)
     talia_gracza2_jednostki, talia_gracza2_specjalne = wybierz_talie(2)
 
     print("\nGracz 1 - Talia:")

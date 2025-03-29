@@ -31,7 +31,7 @@ class Fraction:
         return f"Fraction: {self.name}"
 
 class Unit:
-    def __init__(self, name, strength, fraction, unit_type, effect = None):
+    def __init__(self, name, strength, fraction, unit_type="Unknown", effect = None):
         self.name = name
         self.strength = strength
         self.fraction = fraction
