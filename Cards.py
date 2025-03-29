@@ -1,17 +1,17 @@
 from Classes import *
 
 #zbiór kart pogodowych
-weather_cards = [
-    Special_card("Czyste niebo", "clear"),
-    Special_card("Czyste niebo", "clear"),
-    Special_card("Ulewny deszcz", "one_point"),
-    Special_card("Ulewny deszcz", "one_point"),
-    Special_card("Gęsta mgła", "one_point"),
-    Special_card("Gęsta mgła", "one_point"),
-    Special_card("Gęsta mgła", "one_point"),
-    Special_card("Trzaskający mróz", "one_point"),
-    Special_card("Trzaskający mróz", "one_point"),
-    Special_card("Trzaskający mróz", "one_point")
+special_cards = [
+    Special_card("Czyste niebo", "analuje aktywne karty pogodowe"),
+    Special_card("Czyste niebo", "analuje aktywne karty pogodowe"),
+    Special_card("Ulewny deszcz", "zmienia siłę jednostek oblężniczych na 1"),
+    Special_card("Ulewny deszcz", "zmienia siłę jednostek oblężniczych na 1"),
+    Special_card("Gęsta mgła", "zmienia siłę jednostek dystansowych na 1"),
+    Special_card("Gęsta mgła", "zmienia siłę jednostek dystansowych na 1"),
+    Special_card("Gęsta mgła", "zmienia siłę jednostek dystansowych na 1"),
+    Special_card("Trzaskający mróz", "zmienia siłę jednostek walczących w zwarciu na 1"),
+    Special_card("Trzaskający mróz", "zmienia siłę jednostek walczących w zwarciu na 1"),
+    Special_card("Trzaskający mróz", "zmienia siłę jednostek walczących w zwarciu na 1")
 ]
 
 #zbiór kart Królestwa Północy
