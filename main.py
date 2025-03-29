@@ -1,13 +1,13 @@
 from Cards import special_cards, Northern_Realms_cards
 
 
-def wybierz_talie():
+def wybierz_talie(gracz_num):
     units = Northern_Realms_cards[:]  # Tworzymy kopię listy kart jednostek
     special = special_cards[:]  # Tworzymy kopię listy kart specjalnych
     chosen_cards = []  # Lista, w której będą przechowywane wybrane karty
     chosen_special_cards = []  # Lista wybranych kart specjalnych
 
-    print("Wybierz karty do swojej talii (minimum 22 jednostki).")
+    print(f"\nGracz {gracz_num}, wybierz karty do swojej talii (minimum 22 jednostki).")
     print("Możesz wpisywać kilka numerów kart oddzielonych spacją lub przecinkiem.")
     print('Gdy skończysz wybierać jednostki, wpisz "koniec".')
 
@@ -57,9 +57,8 @@ def wybierz_talie():
             print(f"{i}. {card.name} - Efekt: {card.effect}")
 
         choices = input("Podaj numery kart specjalnych do dodania: ").replace(',', ' ').split()
-
         if "koniec" in choices:
-            break  # Gracz kończy wybór kart specjalnych
+            break
 
         added = False
         for choice in choices:
@@ -87,4 +86,18 @@ def wybierz_talie():
 
 
 if __name__ == "__main__":
-    talia_gracza_jednostki, talia_gracza_specjalne = wybierz_talie()
+    talia_gracza1_jednostki, talia_gracza1_specjalne = wybierz_talie(1)
+
+    talia_gracza2_jednostki, talia_gracza2_specjalne = wybierz_talie(2)
+
+    print("\nGracz 1 - Talia:")
+    for card in talia_gracza1_jednostki:
+        print(f"{card.name} - Siła: {card.strength}")
+    for card in talia_gracza1_specjalne:
+        print(f"{card.name} - Efekt: {card.effect}")
+
+    print("\nGracz 2 - Talia:")
+    for card in talia_gracza2_jednostki:
+        print(f"{card.name} - Siła: {card.strength}")
+    for card in talia_gracza2_specjalne:
+        print(f"{card.name} - Efekt: {card.effect}")
