@@ -1,7 +1,7 @@
 from Cards import special_cards, Northern_Realms_cards
 from database import initialize_db, add_player, save_player_deck, load_player_deck
 from Classes import Unit
-
+import random
 
 def wybierz_talie(player_name):
     saved_deck = load_player_deck(player_name)
@@ -131,3 +131,5 @@ if __name__ == "__main__":
     for card in talia_gracza2_specjalne:
         print(f"{card.name} - Efekt: {card.effect}")
 
+    first_player = random.choice([player1_name, player2_name])
+    print(f"\n🎲 Losowanie... {first_player} zaczyna grę! 🎲")
