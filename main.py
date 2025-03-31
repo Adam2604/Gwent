@@ -167,7 +167,12 @@ def swap_cards(hand, remaining_deck):
     return hand
 
 
-def play_turn(player_name, player_hand, player_strength):
+def play_turn(player_name, player_hand, player_strength, passed):
+    """Obsługuje turę gracza. Jeśli gracz spasował, nie może wykonać ruchu."""
+    if passed[player_name]:
+        print(f"{player_name} już spasował i nie może zagrywać kart.")
+        return player_strength, passed
+
     print(f"\n{player_name}, twoja tura. Twoja siła: {player_strength}")
     print("Twoje karty: ")
     for i, card in enumerate(player_hand, 1):
@@ -178,6 +183,7 @@ def play_turn(player_name, player_hand, player_strength):
 
         if choice == "pass":
             print(f"{player_name} spasował turę.")
+            passed[player_name] = True
             break
 
         try:
@@ -193,38 +199,51 @@ def play_turn(player_name, player_hand, player_strength):
         except ValueError:
             print("Proszę podać numer karty lub 'pass'.")
 
-    return player_strength
-
+    return player_strength, passed
 
 def game_round(player1_name, player1_hand, player2_name, player2_hand):
+    """Obsługuje jedną rundę gry."""
     player1_strength = 0
     player2_strength = 0
+    passed = {player1_name: False, player2_name: False}
 
     while player1_hand or player2_hand:
-        # Gracz 1 wykonuje ruch
-        player1_strength = play_turn(player1_name, player1_hand, player1_strength)
-
-        # Jeśli Gracz 1 spasował lub nie ma kart, Gracz 2 może kontynuować
-        if player1_strength >= 1 and not player1_hand:
-            print(f"{player1_name} skończył karty, teraz tura {player2_name}.")
-
-        # Gracz 2 wykonuje ruch
-        if player2_hand:
-            player2_strength = play_turn(player2_name, player2_hand, player2_strength)
-
-        if player2_strength >= 1 and not player2_hand:
-            print(f"{player2_name} skończył karty, teraz tura {player1_name}.")
-
-        if player1_strength > player2_strength:
-            print(f"\n{player1_name} wygrał rundę!")
+        # Jeśli obaj gracze spasowali, kończymy rundę
+        if passed[player1_name] and passed[player2_name]:
             break
-        else:
-            print(f"{player2_name} wygrał rundę!")
-            break
+
+        # Gracz 1 wykonuje ruch, jeśli nie spasował
+        if not passed[player1_name]:
+            player1_strength, passed = play_turn(player1_name, player1_hand, player1_strength, passed)
+
+        # Gracz 2 wykonuje ruch, jeśli nie spasował
+        if not passed[player2_name]:
+            player2_strength, passed = play_turn(player2_name, player2_hand, player2_strength, passed)
+
+    # Wynik rundy
+    print("\n--- KONIEC RUNDY ---")
+    print(f"{player1_name} - Siła: {player1_strength}")
+    print(f"{player2_name} - Siła: {player2_strength}")
+
+    if player1_strength > player2_strength:
+        print(f"\n{player1_name} WYGRYWA RUNDĘ!")
+    elif player2_strength > player1_strength:
+        print(f"\n{player2_name} WYGRYWA RUNDĘ!")
+    else:
+        print("\nRunda zakończyła się remisem!")
 
 def start_game(player1_name, player1_hand, player2_name, player2_hand):
+    """Rozpoczyna grę, obsługując kolejne rundy aż do zakończenia meczu."""
     print(f"Zaczynamy grę! Gracz {player1_name} rozpoczyna!")
-    game_round(player1_name, player1_hand, player2_name, player2_hand)
+
+    # Pętla rozgrywania rund, dopóki gracze mają karty
+    while player1_hand or player2_hand:
+        game_round(player1_name, player1_hand, player2_name, player2_hand)
+
+        # Sprawdzenie, czy któryś z graczy ma jeszcze karty
+        if not player1_hand and not player2_hand:
+            print("\nObaj gracze nie mają już kart. Gra zakończona!")
+            break
 
 if __name__ == "__main__":
     initialize_db()
@@ -241,14 +260,8 @@ if __name__ == "__main__":
     player1_units, player1_specials = choose_deck(player1_name)
     player2_units, player2_specials = choose_deck(player2_name)
 
-    # Rozdanie kart i wymiana dla obu graczy
-    player1_hand, player1_deck = draw_starting_hand(player1_units, player1_specials)
-    player2_hand, player2_deck = draw_starting_hand(player2_units, player2_specials)
-
-    print(f"\n{player1_name}, wybierz karty do wymiany:")
-    player1_hand = swap_cards(player1_hand, player1_deck)
-
-    print(f"\n{player2_name}, wybierz karty do wymiany:")
-    player2_hand = swap_cards(player2_hand, player2_deck)
+    # Rozdanie kart
+    player1_hand, player1_deck = player1_units[:10], player1_units[10:]
+    player2_hand, player2_deck = player2_units[:10], player2_units[10:]
 
     start_game(player1_name, player1_hand, player2_name, player2_hand)
