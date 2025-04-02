@@ -168,7 +168,7 @@ def swap_cards(hand, remaining_deck):
 
 
 def play_turn(player_name, player_hand, player_strength, passed):
-    """Obsługuje turę gracza. Jeśli gracz spasował, nie może wykonać ruchu."""
+    #Obsługuje turę gracza. Jeśli gracz spasował, nie może wykonać ruchu
     if passed[player_name]:
         print(f"{player_name} już spasował i nie może zagrywać kart.")
         return player_strength, passed
@@ -202,48 +202,67 @@ def play_turn(player_name, player_hand, player_strength, passed):
     return player_strength, passed
 
 def game_round(player1_name, player1_hand, player2_name, player2_hand):
-    """Obsługuje jedną rundę gry."""
+    #Obsługuje jedną rundę gry
     player1_strength = 0
     player2_strength = 0
     passed = {player1_name: False, player2_name: False}
 
     while player1_hand or player2_hand:
-        # Jeśli obaj gracze spasowali, kończymy rundę
         if passed[player1_name] and passed[player2_name]:
             break
 
-        # Gracz 1 wykonuje ruch, jeśli nie spasował
         if not passed[player1_name]:
             player1_strength, passed = play_turn(player1_name, player1_hand, player1_strength, passed)
 
-        # Gracz 2 wykonuje ruch, jeśli nie spasował
         if not passed[player2_name]:
             player2_strength, passed = play_turn(player2_name, player2_hand, player2_strength, passed)
 
-    # Wynik rundy
     print("\n--- KONIEC RUNDY ---")
     print(f"{player1_name} - Siła: {player1_strength}")
     print(f"{player2_name} - Siła: {player2_strength}")
 
     if player1_strength > player2_strength:
         print(f"\n{player1_name} WYGRYWA RUNDĘ!")
+        return player1_name
     elif player2_strength > player1_strength:
         print(f"\n{player2_name} WYGRYWA RUNDĘ!")
+        return player2_name
     else:
         print("\nRunda zakończyła się remisem!")
+        return None
+
 
 def start_game(player1_name, player1_hand, player2_name, player2_hand):
-    """Rozpoczyna grę, obsługując kolejne rundy aż do zakończenia meczu."""
+    #Rozpoczyna grę, obsługując kolejne rundy aż do zakończenia meczu
     print(f"Zaczynamy grę! Gracz {player1_name} rozpoczyna!")
 
-    # Pętla rozgrywania rund, dopóki gracze mają karty
-    while player1_hand or player2_hand:
-        game_round(player1_name, player1_hand, player2_name, player2_hand)
+    rounds_played = 0  # Licznik rund
+    player1_wins = 0
+    player2_wins = 0
 
-        # Sprawdzenie, czy któryś z graczy ma jeszcze karty
-        if not player1_hand and not player2_hand:
-            print("\nObaj gracze nie mają już kart. Gra zakończona!")
-            break
+    while rounds_played < 3 and (player1_hand or player2_hand):
+        winner = game_round(player1_name, player1_hand, player2_name, player2_hand)
+        rounds_played += 1
+
+        if winner == player1_name:
+            player1_wins += 1
+        elif winner == player2_name:
+            player2_wins += 1
+
+        if player1_wins == 2:
+            print(f"\n{player1_name} wygrał mecz!")
+            return
+        elif player2_wins == 2:
+            print(f"\n{player2_name} wygrał mecz!")
+            return
+
+    print("\nMecz zakończony! Sprawdźmy, kto wygrał:")
+    if player1_wins > player2_wins:
+        print(f"\n{player1_name} WYGRYWA!")
+    elif player2_wins > player1_wins:
+        print(f"\n{player2_name} WYGRYWA!")
+    else:
+        print("\nMecz zakończył się remisem!")
 
 if __name__ == "__main__":
     initialize_db()
