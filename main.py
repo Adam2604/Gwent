@@ -109,7 +109,7 @@ def choose_deck(player_name):
 
 
 def draw_starting_hand(unit_deck, special_deck):
-    """Losuje 10 kart dla gracza: jednostki + ewentualnie karty specjalne."""
+    #Losuje 10 kart dla gracza: jednostki + ewentualnie karty specjalne
     deck = unit_deck + special_deck  # Połączenie obu list kart
     random.shuffle(deck)  # Przetasowanie talii
     hand = deck[:10]  # Pobranie pierwszych 10 kart
@@ -118,7 +118,7 @@ def draw_starting_hand(unit_deck, special_deck):
 
 
 def swap_cards(hand, remaining_deck):
-    """Wymusza wymianę dokładnie 3 kart, ale pozwala wybierać je pojedynczo lub wszystkie od razu."""
+    #Wymusza wymianę dokładnie 3 kart, ale pozwala wybierać je pojedynczo lub wszystkie od razu
 
     print("\nTwoja początkowa ręka:")
     for i, card in enumerate(hand, 1):
@@ -140,7 +140,7 @@ def swap_cards(hand, remaining_deck):
 
         for choice in choices:
             if len(swapped_cards) >= 3:
-                break  # Nie pozwalamy wymienić więcej niż 3 kart
+                break  # 3 karty wymienione więc zakończ
 
             try:
                 index = int(choice) - 1
@@ -201,8 +201,8 @@ def play_turn(player_name, player_hand, player_strength, passed):
 
     return player_strength, passed
 
-def game_round(player1_name, player1_hand, player2_name, player2_hand):
-    #Obsługuje jedną rundę gry
+def game_round(player1_name, player1_hand, player1_deck, player2_name, player2_hand, player2_deck, score):
+    #Obsługuje jedną rundę gry i przyznaje dodatkową kartę zwycięzcy
     player1_strength = 0
     player2_strength = 0
     passed = {player1_name: False, player2_name: False}
@@ -223,46 +223,36 @@ def game_round(player1_name, player1_hand, player2_name, player2_hand):
 
     if player1_strength > player2_strength:
         print(f"\n{player1_name} WYGRYWA RUNDĘ!")
-        return player1_name
+        score[player1_name] += 1
+        if player1_deck:
+            new_card = player1_deck.pop(random.randint(0, len(player1_deck) - 1))
+            player1_hand.append(new_card)
+            print(f"{player1_name} otrzymuje dodatkową kartę: {new_card.name}")
     elif player2_strength > player1_strength:
         print(f"\n{player2_name} WYGRYWA RUNDĘ!")
-        return player2_name
+        score[player2_name] += 1
+        if player2_deck:
+            new_card = player2_deck.pop(random.randint(0, len(player2_deck) - 1))
+            player2_hand.append(new_card)
+            print(f"{player2_name} otrzymuje dodatkową kartę: {new_card.name}")
     else:
         print("\nRunda zakończyła się remisem!")
-        return None
+
+    return score
 
 
-def start_game(player1_name, player1_hand, player2_name, player2_hand):
-    #Rozpoczyna grę, obsługując kolejne rundy aż do zakończenia meczu
+def start_game(player1_name, player1_hand, player1_deck, player2_name, player2_hand, player2_deck):
+    #Rozpoczyna grę i kontroluje warunki zwycięstwa
     print(f"Zaczynamy grę! Gracz {player1_name} rozpoczyna!")
 
-    rounds_played = 0  # Licznik rund
-    player1_wins = 0
-    player2_wins = 0
+    score = {player1_name: 0, player2_name: 0}
 
-    while rounds_played < 3 and (player1_hand or player2_hand):
-        winner = game_round(player1_name, player1_hand, player2_name, player2_hand)
-        rounds_played += 1
+    while score[player1_name] < 2 and score[player2_name] < 2:
+        score = game_round(player1_name, player1_hand, player1_deck,
+                           player2_name, player2_hand, player2_deck, score)
 
-        if winner == player1_name:
-            player1_wins += 1
-        elif winner == player2_name:
-            player2_wins += 1
-
-        if player1_wins == 2:
-            print(f"\n{player1_name} wygrał mecz!")
-            return
-        elif player2_wins == 2:
-            print(f"\n{player2_name} wygrał mecz!")
-            return
-
-    print("\nMecz zakończony! Sprawdźmy, kto wygrał:")
-    if player1_wins > player2_wins:
-        print(f"\n{player1_name} WYGRYWA!")
-    elif player2_wins > player1_wins:
-        print(f"\n{player2_name} WYGRYWA!")
-    else:
-        print("\nMecz zakończył się remisem!")
+    winner = player1_name if score[player1_name] == 2 else player2_name
+    print(f"{winner} WYGRYWA CAŁĄ GRĘ!")
 
 if __name__ == "__main__":
     initialize_db()
@@ -283,4 +273,4 @@ if __name__ == "__main__":
     player1_hand, player1_deck = player1_units[:10], player1_units[10:]
     player2_hand, player2_deck = player2_units[:10], player2_units[10:]
 
-    start_game(player1_name, player1_hand, player2_name, player2_hand)
+    start_game(player1_name, player1_hand, player1_deck, player2_name, player2_hand, player2_deck)
