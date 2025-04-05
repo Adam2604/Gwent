@@ -1,5 +1,6 @@
 from Cards import special_cards, Northern_Realms_cards
 from database import initialize_db, add_player, save_player_deck, load_player_deck
+from game_results import initialize_results_db, add_or_update_winner
 from Classes import Unit
 import random
 
@@ -253,9 +254,12 @@ def start_game(player1_name, player1_hand, player1_deck, player2_name, player2_h
 
     winner = player1_name if score[player1_name] == 2 else player2_name
     print(f"{winner} WYGRYWA CAŁĄ GRĘ!")
+    add_or_update_winner(winner)
+
 
 if __name__ == "__main__":
     initialize_db()
+    initialize_results_db()
 
     # Pobranie nazw graczy
     player1_name = input("Podaj nazwę dla Gracza 1: ")
