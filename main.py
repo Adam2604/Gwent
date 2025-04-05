@@ -1,6 +1,6 @@
 from Cards import special_cards, Northern_Realms_cards
 from database import initialize_db, add_player, save_player_deck, load_player_deck
-from game_results import initialize_results_db, add_or_update_winner
+from game_results import initialize_results_db, add_or_update_winner, get_player_wins
 from Classes import Unit
 import random
 
@@ -253,8 +253,10 @@ def start_game(player1_name, player1_hand, player1_deck, player2_name, player2_h
                            player2_name, player2_hand, player2_deck, score)
 
     winner = player1_name if score[player1_name] == 2 else player2_name
-    print(f"{winner} WYGRYWA CAŁĄ GRĘ!")
     add_or_update_winner(winner)
+    total_wins = get_player_wins(winner)
+    print(f"Gratulacje, {winner}! Łącznie wygrałeś {total_wins} razy!")
+
 
 
 if __name__ == "__main__":
@@ -278,3 +280,4 @@ if __name__ == "__main__":
     player2_hand, player2_deck = player2_units[:10], player2_units[10:]
 
     start_game(player1_name, player1_hand, player1_deck, player2_name, player2_hand, player2_deck)
+
