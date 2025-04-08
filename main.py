@@ -226,14 +226,14 @@ def game_round(player1_name, player1_hand, player1_deck, player2_name, player2_h
     if player1_strength > player2_strength:
         print(f"\n{player1_name} WYGRYWA RUNDĘ!")
         score[player1_name] += 1
-        if player1_deck:
+        if player1_deck and score[player1_name] < 2:
             new_card = player1_deck.pop(random.randint(0, len(player1_deck) - 1))
             player1_hand.append(new_card)
             print(f"{player1_name} otrzymuje dodatkową kartę: {new_card.name}")
     elif player2_strength > player1_strength:
         print(f"\n{player2_name} WYGRYWA RUNDĘ!")
         score[player2_name] += 1
-        if player2_deck:
+        if player2_deck and score[player2_name] < 2:
             new_card = player2_deck.pop(random.randint(0, len(player2_deck) - 1))
             player2_hand.append(new_card)
             print(f"{player2_name} otrzymuje dodatkową kartę: {new_card.name}")
@@ -259,6 +259,7 @@ def start_game(player1_name, player1_hand, player1_deck, player2_name, player2_h
     update_match_result(winner, loser)
     total_wins = get_player_wins(winner)
     print(f"Gratulacje, {winner}! Łącznie wygrałeś {total_wins} razy!")
+
     match_result = get_match_results(player1_name, player2_name)
     if match_result:
         player1_wins, player2_wins = match_result
