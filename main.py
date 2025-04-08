@@ -285,6 +285,8 @@ if __name__ == "__main__":
     player2_units, player2_specials = choose_deck(player2_name)
 
     # Rozdanie kart
+    random.shuffle(player1_units)
+    random.shuffle(player2_units)
     player1_hand, player1_deck = player1_units[:10], player1_units[10:]
     player2_hand, player2_deck = player2_units[:10], player2_units[10:]
 
