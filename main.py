@@ -278,17 +278,18 @@ if __name__ == "__main__":
 
     print("\nLosowanie gracza rozpoczynającego...")
     first_player = random.choice([player1_name, player2_name])
+    second_player = player1_name if first_player == player2_name else player2_name
     print(f"Grę rozpoczyna: {first_player}")
 
     # Wybór talii przez graczy
-    player1_units, player1_specials = choose_deck(player1_name)
-    player2_units, player2_specials = choose_deck(player2_name)
+    first_player_units, first_player_specials = choose_deck(first_player)
+    second_player_units, second_player_specials = choose_deck(second_player)
 
     # Rozdanie kart
-    random.shuffle(player1_units)
-    random.shuffle(player2_units)
-    player1_hand, player1_deck = player1_units[:10], player1_units[10:]
-    player2_hand, player2_deck = player2_units[:10], player2_units[10:]
+    random.shuffle(first_player_units)
+    random.shuffle(second_player_units)
+    player1_hand, player1_deck = first_player_units[:10], first_player_units[10:]
+    player2_hand, player2_deck = second_player_units[:10], second_player_units[10:]
 
-    start_game(player1_name, player1_hand, player1_deck, player2_name, player2_hand, player2_deck)
+    start_game(first_player, player1_hand, player1_deck, second_player, player2_hand, player2_deck)
 
