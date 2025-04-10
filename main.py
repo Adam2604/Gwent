@@ -273,8 +273,8 @@ if __name__ == "__main__":
     initialize_results_db()
 
     # Pobranie nazw graczy
-    player1_name = input("Podaj nazwę dla Gracza 1: ")
-    player2_name = input("Podaj nazwę dla Gracza 2: ")
+    player1_name = input("Podaj nazwę dla Gracza 1: ").capitalize()
+    player2_name = input("Podaj nazwę dla Gracza 2: ").capitalize()
 
     print("\nLosowanie gracza rozpoczynającego...")
     first_player = random.choice([player1_name, player2_name])
