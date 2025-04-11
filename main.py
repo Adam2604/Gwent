@@ -8,74 +8,82 @@ import random
 
 def edit_deck(saved_deck_obj):
     """
-    Wyświetla zapisaną talię oraz pozwala graczowi edytować ją:
-    - Usuwanie wybranych kart z talii.
-    - Dobieranie nowych kart – gracz wybiera, które nowe karty (z dostępnej puli) chce dobrać,
-      przy czym liczba dobranych kart musi być równa liczbie usuniętych.
-    Zwraca zedytowaną talię.
+    Pozwala graczowi edytować zapisaną talię:
+      - Wyświetla zapisaną talię i pyta, które karty usunąć.
+        Gracz może pominąć ten etap, wpisując "pomiń".
+      - Następnie gracz może dobrać dodatkowe karty (wybierając je z dostępnej puli)
+        aż łączna liczba kart jednostek w talii będzie wynosić co najmniej 22.
+      - Gracz ma możliwość dobierania kart pojedynczo lub partiami.
+      - Jeśli gracz wpisze "koniec", proces dobierania się zakończy (pod warunkiem, że talia ma co najmniej 22 karty).
+    Zwraca nową, zedytowaną talię.
     """
     print("\nTwoja zapisana talia:")
     for i, card in enumerate(saved_deck_obj, 1):
         print(f"{i}. {card.name} - Siła: {card.strength}")
 
-    indices_str = input("Podaj numery kart, które chcesz usunąć (oddzielone spacją): ")
-    indices = []
-    for s in indices_str.split():
-        if s.isdigit():
-            indices.append(int(s) - 1)
-    if not indices:
-        print("Nie wybrano żadnych kart do usunięcia. Talia pozostaje niezmieniona.")
-        return saved_deck_obj
-
-    # Aby uniknąć problemów z usuwaniem elementów, sortujemy indeksy malejąco
-    indices = sorted(indices, reverse=True)
-    removed_count = 0
-    for idx in indices:
-        if 0 <= idx < len(saved_deck_obj):
-            removed = saved_deck_obj.pop(idx)
-            removed_count += 1
-            print(f"Usunięto: {removed.name}")
+    # Opcjonalny etap usuwania kart
+    indices_str = input(
+        "Podaj numery kart do usunięcia (oddzielone spacją) lub wpisz 'pomiń', aby pominąć ten etap: ").strip().lower()
+    if indices_str == "pomiń":
+        print("Pominęto usuwanie kart.")
+    else:
+        indices = []
+        for s in indices_str.split():
+            if s.isdigit():
+                indices.append(int(s) - 1)
+        if indices:
+            indices = sorted(indices, reverse=True)
+            for idx in indices:
+                if 0 <= idx < len(saved_deck_obj):
+                    removed = saved_deck_obj.pop(idx)
+                    print(f"Usunięto: {removed.name}")
+                else:
+                    print(f"Nieprawidłowy numer karty: {idx + 1}")
         else:
-            print(f"Nieprawidłowy numer karty: {idx + 1}")
+            print("Nie podano żadnych numerów. Przechodzimy dalej.")
 
-    print(f"\nUsunięto {removed_count} kart.")
+    current_count = len(saved_deck_obj)
+    print(f"\nObecnie talia zawiera {current_count} kart jednostek.")
 
     # Przygotowanie puli kart do doboru – kopiujemy Northern_Realms_cards
-    # (Możesz też rozważyć wyeliminowanie z puli kart, które już znajdują się w talii)
     available_pool = Northern_Realms_cards[:]
-    # Opcjonalnie usuń karty, które już występują w talii (aby nie pojawiały się duplikaty)
+    # Opcjonalnie usuwamy z puli karty, które już znajdują się w zedytowanej talii,
+    # aby uniknąć duplikatów
     for card in saved_deck_obj:
         available_pool = [c for c in available_pool if c.name != card.name]
 
-    if not available_pool:
+    if not available_pool and len(saved_deck_obj) < 22:
         print("Brak dostępnych kart do doboru!")
         return saved_deck_obj
 
-    print(f"\nMusisz dobrać {removed_count} kart spośród dostępnych:")
-    for i, card in enumerate(available_pool, 1):
-        print(f"{i}. {card.name} - Siła: {card.strength}")
-
+    # Pętla doboru nowych kart – gracz może wpisywać numery nowych kart,
+    # a jeśli wpisze "koniec", proces zakończy się (pod warunkiem, że jest minimum 22 kart)
     while True:
-        new_choices = input(f"Podaj numery {removed_count} nowych kart (oddzielone spacją): ").replace(',', ' ').split()
-        if len(new_choices) != removed_count:
-            print(f"Musisz podać dokładnie {removed_count} numery kart!")
-            continue
+        print(f"\nObecnie talia zawiera {len(saved_deck_obj)} kart jednostek.")
+        new_choices_line = input(
+            "Podaj numery nowych kart do dołączenia (lub wpisz 'koniec', aby zakończyć dobieranie): ").replace(',', ' ')
+        new_choices = new_choices_line.split()
+        if "koniec" in new_choices:
+            if len(saved_deck_obj) >= 22:
+                break
+            else:
+                print(f"Nie możesz zakończyć – w talii musi być co najmniej 22 kart (obecnie {len(saved_deck_obj)}).")
+                continue
 
-        try:
-            chosen_new_cards = []
-            for s in new_choices:
+        added = False
+        for s in new_choices:
+            try:
                 index = int(s) - 1
                 if 0 <= index < len(available_pool):
-                    chosen_new_cards.append(available_pool[index])
+                    saved_deck_obj.append(available_pool[index])
+                    print(f"Dodano: {available_pool[index].name}")
+                    added = True
                 else:
-                    raise ValueError
-            # Jeśli poprawnie wybrano, dodaj wybrane karty do talii
-            for card in chosen_new_cards:
-                saved_deck_obj.append(card)
-            break
-        except ValueError:
-            print("Wpisz poprawne numery kart, które znajdują się na liście.")
-
+                    print(f"Nieprawidłowy numer karty: {s}")
+            except ValueError:
+                print(f"Wpisz poprawny numer zamiast: {s}")
+        if added:
+            print(f"Obecnie talia zawiera {len(saved_deck_obj)} kart jednostek.")
     print("\nNowa talia po edycji:")
     for i, card in enumerate(saved_deck_obj, 1):
         print(f"{i}. {card.name} - Siła: {card.strength}")
